@@ -1,4 +1,4 @@
-# vk_music
+# vk_music [![Build Status](https://travis-ci.org/stleon/vk_music.svg?branch=master)](https://travis-ci.org/stleon/vk_music)
 
 Very-very simple vk music downloader.
 
