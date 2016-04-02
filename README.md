@@ -28,6 +28,7 @@ export TOKEN=very_security_token
 
 - **Python 3.5**
 - **requests**
+- **py.test**
 
 ```
 pip install -r requirements.txt
@@ -37,4 +38,12 @@ pip install -r requirements.txt
 
 ```
 python3.5 vk_music.py
+```
+
+## Tests
+
+You can run tests by this command:
+
+```
+py.test -v --durations=10 tests.py
 ```

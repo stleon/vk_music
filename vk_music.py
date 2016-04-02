@@ -11,9 +11,29 @@ logger = logging.getLogger('app.' + __name__)
 logger.setLevel(logging.INFO)
 
 
+class Track():
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+    @property
+    def get_artist(self):
+        return self.artist.strip()
+
+    @property
+    def get_title(self):
+        return self.title.strip().replace('/', '')
+
+    @property
+    def download_url(self):
+        return self.url.split("?")[0]
+
+    def __str__(self):
+        return '%s - %s.mp3' % (self.get_artist, self.get_title)
+
+
 class VkMusic():
-    def __init__(self, vk_id, token, path, api_v=5.45):
-        self.vk_id, self.token = vk_id, token
+    def __init__(self, vk_id, token, path='audio', api_v=5.45):
+        self.vk_id, self.token = int(vk_id), token
         self.path, self.api_v = path, api_v
         self.base_url = "https://api.vk.com/method/" \
                         "{method_name}?{parametrs}" \
@@ -32,34 +52,31 @@ class VkMusic():
         r = requests.get(url)
         return r.json()
 
-    def audio_get(self):
-        return self.api_request(method_name='audio.get',
-                                owner_id=self.vk_id, )['response']['items']
+    def tracks(self):
+        track_lst = self.api_request(method_name='audio.get',
+                                     owner_id=self.vk_id, )['response']['items']
+        return (Track(**data) for data in track_lst)
 
-    def audio_save(self, audio):
-        file_name = '{path}/{artist} - {title}.mp3' \
-            .format(path=self.path,
-                    artist=audio['artist'].strip(),
-                    title=audio['title'].strip().replace('/', ''))
+    def track_save(self, track):
+        file_name = '{path}/{track}'.format(path=self.path, track=track)
 
         if not os.path.exists(file_name):
             with open(file_name, "wb") as f:
                 logger.info('Saving: %s', file_name)
-                r = requests.get(audio['url'].split("?")[0])
+                r = requests.get(track.download_url)
                 f.write(r.content)
-
+            return True
         else:
             logger.info('Exists: %s', file_name)
+            return False
 
 
 if __name__ == '__main__':
 
-    vk_id_input = int(input('Enter VK ID: '))
+    vk_id = input('Enter VK ID: ')
 
-    vk = VkMusic(vk_id=vk_id_input, token=os.getenv('TOKEN'),
-                 path='audio')
+    vk = VkMusic(vk_id=vk_id if vk_id else os.getenv('VK_ID'),
+                 token=os.getenv('TOKEN'))
 
-    tracks = vk.audio_get()
-
-    for track in tracks:
-        vk.audio_save(track)
+    for track in vk.tracks():
+        vk.track_save(track)
