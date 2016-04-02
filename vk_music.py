@@ -32,8 +32,8 @@ class Track():
 
 
 class VkMusic():
-    def __init__(self, vk_id, token, path, api_v=5.45):
-        self.vk_id, self.token = vk_id, token
+    def __init__(self, vk_id, token, path='audio', api_v=5.45):
+        self.vk_id, self.token = int(vk_id), token
         self.path, self.api_v = path, api_v
         self.base_url = "https://api.vk.com/method/" \
                         "{method_name}?{parametrs}" \
@@ -65,16 +65,18 @@ class VkMusic():
                 logger.info('Saving: %s', file_name)
                 r = requests.get(track.download_url)
                 f.write(r.content)
+            return True
         else:
             logger.info('Exists: %s', file_name)
+            return False
 
 
 if __name__ == '__main__':
 
-    vk_id_input = int(input('Enter VK ID: '))
+    vk_id = input('Enter VK ID: ')
 
-    vk = VkMusic(vk_id=vk_id_input, token=os.getenv('TOKEN'),
-                 path='audio')
+    vk = VkMusic(vk_id=vk_id if vk_id else os.getenv('VK_ID'),
+                 token=os.getenv('TOKEN'))
 
     for track in vk.tracks():
         vk.track_save(track)
