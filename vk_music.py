@@ -8,7 +8,7 @@ import requests
 logging.basicConfig(format='%(levelname)s %(asctime)s %(name)s %(message)s',
                     datefmt='%H:%M:%S %d.%m.%y')
 logger = logging.getLogger('app.' + __name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 
 class Track():
@@ -53,8 +53,10 @@ class VkMusic():
         return r.json()
 
     def tracks(self):
-        track_lst = self.api_request(method_name='audio.get',
-                                     owner_id=self.vk_id, )['response']['items']
+        r = self.api_request(method_name='audio.get',
+                                     owner_id=self.vk_id, )
+        logger.debug(r)
+        track_lst = r['response']['items']
         return (Track(**data) for data in track_lst)
 
     def track_save(self, track):
