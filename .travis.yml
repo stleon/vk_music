@@ -6,7 +6,7 @@ install:
   - pip install -r requirements.txt
 
 script:
-  - py.test -v -s --durations=10 tests.py
+  - py.test -v -s --durations=10 --ignore=env
 
 notifications:
   email:
