@@ -3,7 +3,7 @@ from types import GeneratorType
 
 import pytest
 
-from vk_music import Track, VkMusic
+from vk_music import VkMusic
 
 
 @pytest.yield_fixture()
@@ -53,21 +53,3 @@ def test_track_save_not_exists_bool(track_save):
 def test_track_save_exists(vk_api, first_track, track_save):
     exists = vk_api.track_save(first_track)
     assert exists == False
-
-
-class TestTrack:
-    def setup_class(self):
-        self.track = Track(artist=' Test Artist ', title=' Test /title/ ',
-                           url='http://domain.com/21731082371?test')
-
-    def test_get_artist(self):
-        assert self.track.get_artist == 'Test Artist'
-
-    def test_get_title(self):
-        assert self.track.get_title == 'Test title'
-
-    def test_get_download_url(self):
-        assert self.track.download_url == 'http://domain.com/21731082371'
-
-    def test_str(self):
-        assert str(self.track) == 'Test Artist - Test title.mp3'
