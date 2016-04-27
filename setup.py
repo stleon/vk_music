@@ -19,8 +19,7 @@ setup(
     maintainer_email=EMAIL,
     url='https://github.com/stleon/vk_music',
     download_url='https://github.com/stleon/vk_music/archive/master.zip',
-    packages=find_packages(
-        exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
+    packages=find_packages(),
     install_requires=requirements,
     license=vk_music.__license__,
     zip_safe=False,
