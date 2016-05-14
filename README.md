@@ -45,5 +45,5 @@ python3.5 vk_music.py
 You can run tests by this command:
 
 ```
-py.test -v --durations=10 tests.py
+py.test -v --durations=10 --ignore=env
 ```
