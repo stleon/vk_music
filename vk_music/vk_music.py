@@ -3,7 +3,7 @@ import os
 
 import requests
 
-from .track import Track
+from vk_music.track import Track
 
 # LOGGING
 
@@ -31,8 +31,10 @@ class VkMusic():
                                    api_v=self.api_v,
                                    token=self.token)
         logger.info('Get request: %s', url)
-        r = requests.get(url)
-        return r.json()
+        js = requests.get(url).json()
+        if 'error' in js.keys():
+            raise Exception(js)
+        return js
 
     def tracks(self):
         track_lst = self.api_request(method_name='audio.get',
@@ -55,7 +57,7 @@ class VkMusic():
 
 if __name__ == '__main__':
 
-    vk_id = input('Enter VK ID: ')
+    vk_id = 14260946 #input('Enter VK ID: ')
 
     vk = VkMusic(vk_id=vk_id if vk_id else os.getenv('VK_ID'),
                  token=os.getenv('TOKEN'))
